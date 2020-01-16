@@ -1,0 +1,163 @@
+﻿
+
+@{
+    ViewData["Title"] = "Map Main";
+}
+<style>
+    #map_canvas {
+        border: 2px solid black;
+        height: 600px;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+
+    .locations {
+        width: 240px;
+        height: 40px;
+        border: 0px;
+        outline: none;
+        border-radius: 6px;
+        display: inline-block;
+        overflow: hidden;
+        background: #3c8dbc;
+        border: 1px solid #cccccc;
+        text-align: center;
+        text-decoration: solid;
+       font-weight:bold;
+    }
+</style>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <br />
+    <div class="selectWrapper">
+         <label><b>Search businesses in your Area Below </b> </label><br />
+            <select name="locations" id="locations" class="locations">
+            <option value="1"> Daspoort </option>
+            <option value="2"> Pretoria </option>
+            <option value="3"> Soshanguve </option>
+            <option value="4"> Garankuwa </option>
+
+        </select>
+    </div>
+    <br />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfEL7yh4miG2_8ZAgEDBIjuSXca3R4tYY&callback=initMap"></script>
+        <div id="map_canvas"></div>
+
+</div>
+
+
+@section Styles{
+
+}
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+           //load dropdown
+   //  $(function LoadData() {  
+   //    $.ajax({  
+   //        type: "GET",  
+   //        url:'/api/Areas/GetAreaById',  
+   //        data: "{}",  
+   //        success: function (data) {  
+   //            var s = '<option value="-1">Please Select a Area</option>';  
+   //            for (var i = 0; i < data.length; i++) {  
+   //                s += '<option value="' + data[i].AreaID + '">' + data[i].Area + '</option>';  
+   //            }  
+   //            $("#Area").html(s);  
+   //        }  
+   //    });  
+   //});
+        //loAD MAP
+        $(function () {
+
+            var locations = new Array();
+
+            $("#locations").change(function () {
+
+                area = $("#locations").val();
+
+                $.ajax({
+                    url: '/api/Locations/GetById/' + area,
+                    type: "GET",
+                    success: function (result) {
+                        debugger;
+                        locations = result;
+                        console.log("api/Locations/GetById");
+                        console.log(locations);
+                        loadMap();
+
+                    }
+                });
+            });
+
+            function loadMap() {
+
+                debugger;
+                var area = 0;
+
+
+                var long = 0;
+                var latitude = 0;
+                var map;
+                var markers = [];
+                debugger
+                console.log("locations");
+                console.log(locations);
+
+                function init() {
+                    map = new google.maps.Map(document.getElementById('map_canvas'), {
+                        zoom: 10,
+                        center: new google.maps.LatLng(-25.747868, 28.229271),
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    });
+                        if (navigator.geolocation) {
+         navigator.geolocation.getCurrentPosition(function (position) {
+             initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+             map.setCenter(initialLocation);
+         });
+                            }
+     
+                    var numMarkers = locations.length;
+                    for (var i = 0; i < numMarkers; i++) {
+                      
+                        latitude = Number(locations[i]['latitude']);
+                        long = Number(locations[i]['longitude']);
+                        markers[i] = new google.maps.Marker({
+                            position: {
+                                lat:  latitude,
+                                lng: long
+                            },
+                            map: map,
+                            html: locations[i]['Details'],
+                            id: i,
+                        });
+                        google.maps.event.addListener(markers[i], 'click', function () {
+                            var infowindow = new google.maps.InfoWindow({
+                                id: this.id,
+                                content: this.html,
+                                position: this.getPosition()
+                            });
+                            google.maps.event.addListenerOnce(infowindow, 'closeclick', function () {
+                                markers[this.id].setVisible(true);
+                            });
+                            this.setVisible(false);
+                            infowindow.open(map);
+                        });
+                    }
+                }
+                init();
+            }
+
+
+        });
+
+     
+
+
+    </script>
+
+}

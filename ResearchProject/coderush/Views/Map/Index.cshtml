@@ -1,0 +1,246 @@
+﻿
+
+@{
+    ViewData["Title"] = "Map Main";
+}
+<style>
+    #map_canvas {
+        border: 2px solid black;
+        height: 600px;
+        width: 100%;
+        border-radius: 4px;
+    }
+
+
+    .locations {
+        width: 240px;
+        height: 40px;
+        border: 0px;
+        outline: none;
+        border-radius: 6px;
+        display: inline-block;
+        overflow: hidden;
+        background: #3c8dbc;
+        border: 1px solid #cccccc;
+        text-align: center;
+        text-decoration: solid;
+       font-weight:bold;
+    }
+</style>
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <br />
+    <div class="selectWrapper">
+         <label><b> Businesses Around Your Area Below </b> </label><br />
+                                                                       <select name="locations" id="locations" class="locations" onchange="changeMap(this.value)">
+                                                                       <option value="0">Select your Area</option>
+                                                                       <option value="1">Daspoort</option>
+                                                                       <option value="2">Pretoria</option>
+                                                                       <option value="3">Soshanguve</option>
+                                                                       <option value="4">Gara-Nkuwa</option>
+                                                                       <Option value="5">Alexandra</Option>
+                                                                       <Option value="6">Johannesburg</Option>
+                                                                       <Option value="7">Lenasia</Option>
+                                                                       <Option value="8">Midrand</Option>
+                                                                       <Option value="9">Randburg</Option>
+                                                                       <Option value="10">Roodepoort</Option>
+                                                                       <Option value="11">Sandton</Option>
+                                                                       <Option value="12">Soweto</Option>
+                                                                       <Option value="13">Alberton</Option>
+                                                                       <Option value="14">Benoni</Option>
+                                                                       <Option value="15">Boksburg</Option>
+                                                                       <Option value="16">Brakpan</Option>
+                                                                       <Option value="17">Daveyton</Option>
+                                                                       <Option value="18">Devon</Option>
+                                                                       <Option value="19">Duduza</Option>
+                                                                       <Option value="20">Edenvale</Option>
+                                                                       <Option value="21">Germiston</Option>
+                                                                       <Option value="22">Impumelelo</Option>
+                                                                       <Option value="23">Isando </Option>
+                                                                       <Option value="24">Katlehong</Option>
+                                                                       <Option value="25">Kempton Park</Option>
+                                                                       <Option value="26">Kwathema</Option>
+                                                                       <Option value="27">Nigel</Option>
+                                                                       <Option value="28">Reiger Park</Option>
+                                                                       <Option value="29">Springs</Option>
+                                                                       <Option value="30">Tembisa</Option>
+                                                                       <Option value="31">Thokoza</Option>
+                                                                       <Option value="32">Tsakane</Option>
+                                                                       <Option value="33">Vosloorus</Option>
+                                                                       <Option value="34">Wattville</Option>
+                                                                       <Option value="35">Atteridgeville</Option>
+                                                                       <Option value="36">Centurion</Option>
+                                                                       <Option value="37">Hammanskraal</Option>
+                                                                       <Option value="38">Irene</Option>
+                                                                       <Option value="39">Mamelodi</Option>
+                                                                       <Option value="40">Pretoria</Option>
+                                                                       <Option value="41">Soshanguwe</Option>
+                                                                       <Option value="42">Boipatong</Option>
+                                                                       <Option value="43">Bophelong</Option>
+                                                                       <Option value="44">Evaton</Option>
+                                                                       <Option value="45">Sebokeng</Option>
+                                                                       <Option value="46">Sharpeville</Option>
+                                                                       <Option value="47">Vanderbijlpark</Option>
+                                                                       <Option value="48">Vereeniging</Option>
+                                                                       <Option value="49">Meyerton</Option>
+                                                                       <Option value="50">Heidelberg</Option>
+                                                                       <Option value="51">Ratanda</Option>
+                                                                       <Option value="52">Bronkhorstspruit</Option>
+                                                                       <Option value="53">Ekangala</Option>
+                                                                       <Option value="54">Bronberg</Option>
+                                                                       <Option value="55">Cullinan</Option>
+                                                                       <Option value="56">Refilwe</Option>
+                                                                       <Option value="57">Zithobeni</Option>
+                                                                       <Option value="58">Carletonville</Option>
+                                                                       <Option value="59">Khutsong</Option>
+                                                                       <Option value="60">Kagiso</Option>
+                                                                       <Option value="61">Kromdraai</Option>
+                                                                       <Option value="62">Krugersdorp</Option>
+                                                                       <Option value="63">Magaliesburg</Option>
+                                                                       <Option value="64">Muldersdrift</Option>
+                                                                       <Option value="65">Mohlakeng</Option>
+                                                                       <Option value="66">Randfontein</Option>
+                                                                       <Option value="67">Bekkersdal</Option>
+                                                                       <Option value="68">Westonaria</Option>
+                                                                 </select>
+    </div>
+    <br />
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfEL7yh4miG2_8ZAgEDBIjuSXca3R4tYY&callback=initMap"></script>
+        <div id="map_canvas"></div>
+
+</div>
+
+
+@section Styles{
+
+}
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+           //load dropdown
+   //  $(function LoadData() {  
+   //    $.ajax({  
+   //        type: "GET",  
+   //        url:'/api/Areas/GetAreaById',  
+   //        data: "{}",  
+   //        success: function (data) {  
+   //            var s = '<option value="-1">Please Select a Area</option>';  
+   //            for (var i = 0; i < data.length; i++) {  
+   //                s += '<option value="' + data[i].AreaID + '">' + data[i].Area + '</option>';  
+   //            }  
+   //            $("#Area").html(s);  
+   //        }  
+   //    });  
+   //});
+        //loAD MAP
+        $(function () {
+
+            var locations = new Array();
+
+            $("#locations").change(function () {
+
+                area = $("#locations").val();
+
+                $.ajax({
+                    url: '/api/Locations/GetById/' + area,
+                    type: "GET",
+                    success: function (result) {
+                        debugger;
+                        locations = result;
+                        console.log("api/Locations/GetById");
+                        console.log(locations);
+                        loadMap();
+
+                    }
+                });
+            });
+
+            function loadMap() {
+
+                debugger;
+                var area = 0;
+
+
+                var long = 0;
+                var latitude = 0;
+                var map;
+                var markers = [];
+                debugger
+                console.log("locations");
+                console.log(locations);
+
+                function init() {
+                        map = new google.maps.Map(document.getElementById('map_canvas'), {
+                        zoom: 7,
+                        center: new google.maps.LatLng(-26.270760, 28.112268),
+                        mapTypeId: google.maps.MapTypeId.Roadmap  
+                       });
+                        if (navigator.geolocation) {
+                         navigator.geolocation.getCurrentPosition(function (position) {
+                         initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                         map.setCenter(initialLocation);
+                     });
+                    }
+                  
+                    var numMarkers = locations.length;
+                    for (var i = 0; i < numMarkers; i++) {
+                      
+                        latitude = Number(locations[i]['latitude']);
+                        long = Number(locations[i]['longitude']);
+                        markers[i] = new google.maps.Marker({
+                            position: {
+                                lat:  latitude,
+                                lng: long
+                            },
+                            map: map,
+                            html: locations[i]['Details'],
+                            id: i,
+                        });
+                        google.maps.event.addListener(markers[i], 'click', function () {
+                            var infowindow = new google.maps.InfoWindow({
+                                id: this.id,
+                                content: this.html,
+                                position: this.getPosition()
+                            });
+                            google.maps.event.addListenerOnce(infowindow, 'closeclick', function () {
+                                markers[this.id].setVisible(true);
+                            });
+                            this.setVisible(false);
+                            infowindow.open(map);
+                        });
+
+
+                    }
+                }
+                init();
+
+                function changeMap(locations)
+                {
+                  var c = coords[locations].split(',');
+                  map.setCenter(new google.maps.LatLng(c[0], c[1]));
+                }
+            }
+           
+        });
+
+        //     $(function() {
+        //  // choose target dropdown
+        //  var select = $('select');
+        //  select.html(select.find('option').sort(function(x, y) {
+        //    // to change to descending order switch "<" for ">"
+              
+        //      return $(x).text() > $(y).text();
+
+        //  }));
+
+        //        // select default item after sorting(first item);
+        //       // $('select').get(0).selectedIndex = 0;
+        //});
+
+
+    </script>
+
+}
